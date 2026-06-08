@@ -56,23 +56,25 @@ onMounted(()=>{
 <template>
   <h1>{{ message }}</h1>
 <hr />
-<div class="product-add-section">
-  <h2>Add Product</h2>
-    <form @submit.prevent="postProduct">  
-      <div class="product-form" >
-        <input label="name" type="text" name="name" v-model="productForm.name" placeholder="Product Name" />
-        <input label="price" type="number" name="price" v-model.float="productForm.price" placeholder="Product Price">
-        <textarea label="description" name="description" 
-          v-model="productForm.description"
-        placeholder="Write your product description ..."></textarea>
-      </div>
-      <button class="btn" type="submit">Add Product</button>
-    </form>
-</div>
-<hr />
+<main class="product-main">
+  <div class="product-add-section">
+    <h2>Add Product</h2>
+      <form @submit.prevent="postProduct">  
+        <div class="product-form" >
+          <input label="name" type="text" name="name" v-model="productForm.name" placeholder="Product Name" />
+          <input label="price" type="number" name="price" v-model.float="productForm.price" placeholder="Product Price">
+          <textarea label="description" name="description" 
+            v-model="productForm.description"
+          placeholder="Write your product description ..."></textarea>
+        </div>
+        <button class="btn" type="submit">Add Product</button>
+      </form>
+  </div>
 
-<div class="product-display-section">
-  <h2>Products</h2>
+  <div class="product-display-section">
+  <div class="product-head">
+    <h2>Products</h2>
+  </div>
 
   <div class="product-display" v-if="products.length > 0">
       <div class="product-single" v-for="product in products" :key="product.id">
@@ -85,6 +87,10 @@ onMounted(()=>{
     <h3>No Product Availabe. 🙄 </h3>
   </div>
 </div>
+</main>
+
+<hr />
+
 
   <p>
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
@@ -93,11 +99,33 @@ onMounted(()=>{
 </template>
 
 <style scoped>
+@import "theme.css";
 
-hr{ border-color: #1d1d1d}
-hr.product-hr{border-color: #555; border-width: .5px;}
+p, h1{ 
+  color: var(--accent2-theme);
+}
+hr{ border-color: var(--default-theme)}
+hr.product-hr{border-color: var(--default-theme); border-width: .5px;}
+
+::placeholder{
+  color: #333;
+  font-style: italic;
+}
+input,textarea{
+  background-color: var(--accent-theme);
+  color: var(--bg-dark-theme);
+}
+
+.product-display-section{
+  padding-left: 30px;
+}
+
+.product-main{
+  display: flex;
+  justify-content: center;
+}
 .product-form{
-  width: 50vw;
+  width: 30vw;
   gap: 10px;
   display: flex;
   flex-direction: column;
@@ -107,12 +135,13 @@ hr.product-hr{border-color: #555; border-width: .5px;}
 .product-display{
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
     gap: 20px;
 }
 
 .product-single{
-  border: .5px solid #1d1d1d;
+  background-color: var(--default-theme);
+  border: .5px solid var(--default-theme);
+  border-radius: 10px;
   padding: 10px;
   width: 210px;
 }
