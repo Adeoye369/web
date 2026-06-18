@@ -4,6 +4,11 @@ import { onMounted, ref } from 'vue';
 
 const message = ref('Waiting...')
 const products = ref([])
+const currentPage = ref(1)
+const totalPages = ref(1)
+const totalProducts = ref(0)
+const limit = 6
+
 const initForm = {
   name:'',
   price: null,
@@ -30,10 +35,21 @@ async function postProduct() {
 
 async function getProducts(){
   try {
-    const res = await axios.get("http://localhost:3000/api/products")
-    products.value = res.data
+    const res = await axios.get(`http://localhost:3000/api/products?page=${currentPage.value}&limit=${limit}`)
+
+    products.value = res.data.products
+    totalPages.value = res.data.totalPages
+    totalProducts.value = res.data.totalProducts
+
   } catch (error) {
       console.log(error.response.data)
+  }
+}
+
+function gotoPage (page){
+  if(page >= 1 && page <= totalPages.value){
+    currentPage.value = page
+    getProducts()
   }
 }
 
@@ -44,6 +60,26 @@ async function initMsg(){
     console.log(error)
   }
 
+}
+
+async function addBulk(){
+  try {
+    const res = await axios.get('http://localhost:3000/api/products/faker')
+    console.log(res.data.message)
+    getProducts()
+  } catch (error) {
+    console.log(error.response.data)
+  }
+}
+
+async function deleteBulk(){
+  try {
+    const res = await axios.get('http://localhost:3000/api/delete-bulk')
+    console.log(res.data)
+    getProducts()
+  } catch (error) {
+    console.log(error.response.data)
+  }
 }
 
 onMounted(()=>{
@@ -69,6 +105,16 @@ onMounted(()=>{
         </div>
         <button class="btn" type="submit">Add Product</button>
       </form>
+
+      <hr>
+
+      <button class="btn"
+      @click="addBulk"
+      >Add 1000 fake products </button>
+
+      <button class="btn"
+      @click="deleteBulk"
+      >Delete 1000 </button>
   </div>
 
   <div class="product-display-section">
@@ -86,6 +132,26 @@ onMounted(()=>{
   <div v-else>
     <h3>No Product Availabe. 🙄 </h3>
   </div>
+
+  <!-- Pagination Section -->
+   <div class="pagination" v-if="totalPages > 1">
+      <button
+      @click="gotoPage(currentPage - 1)"
+      :disabled="currentPage === 1"
+      >
+        Prev
+      </button>
+
+      <span>{{ currentPage }} of {{ totalPages }}</span>
+
+      <button
+      @click="gotoPage(currentPage + 1)"
+      :disabled="currentPage === totalPages"
+      >
+      next
+    </button>
+   </div>
+   
 </div>
 </main>
 
@@ -96,6 +162,7 @@ onMounted(()=>{
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
   </p>
+  
 </template>
 
 <style scoped>
@@ -144,5 +211,27 @@ input,textarea{
   border-radius: 10px;
   padding: 10px;
   width: 210px;
+}
+
+/* Paginaiton */
+.pagination{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px
+}
+
+.pagination button{
+  background-color: var(--accent2-theme);
+  color: var(--default-theme);
+  border-radius: 10px;
+  border: 1px solid var(--default-theme);
+  height: 30px;
+}
+
+.pagination button:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>

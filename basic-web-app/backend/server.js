@@ -43,7 +43,12 @@ app.post('/api/products', async (req, res)=>{
 
 app.get('/api/products', async(req, res)=>{
     try {
-        const products = await Product.findAll()
+        const products = await Product.findAll({
+            benchmark: true,
+            logging: (sql, timingMs)=>{
+                console.log(`findAll took, ${timingMs}ms`)
+            }
+        })
         res.json(products)
     } catch (error) {
         res.status(500).json(error.message)
