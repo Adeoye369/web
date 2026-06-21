@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const sequelize = new Sequelize('basic_app_db', 'root', process.env.DB_PASS,
+const sequelize = new Sequelize('express_test_db', 'root', process.env.DB_PASS,
     {
         dialect: 'mysql',
         host: 'localhost'

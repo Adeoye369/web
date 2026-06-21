@@ -6,6 +6,10 @@ const message = ref('Waiting...')
 const initForm = {name: '', price: null, description: ''}
 const productForm = ref({...initForm})
 const products = ref([])
+const totalPages = ref(0)
+const currentPage = ref(1)
+const totalProducts = ref(0)
+const limit = 10
 
 const BASE_URL = 'http://localhost:3000'
 
@@ -26,12 +30,22 @@ async function postProduct(){
 
 async function getProduct(){
   try {
-    const res = await axios.get(`${BASE_URL}/api/products`)
+    const res = await axios.get(`${BASE_URL}/api/products?page=${currentPage.value}&limit=${limit}`)
     console.log(res.data)
-    products.value = res.data
+    products.value = res.data.products
+    totalPages.value = res.data.totalPages
+    totalProducts.value = res.data.totalProducts
+
       
   } catch (error) {
     console.log(error.response.data)
+  }
+}
+
+function gotoPage(page){
+  if(page >= 1 && page <= totalPages.value){
+    currentPage.value = page
+    getProduct()
   }
 }
 
@@ -75,6 +89,22 @@ onMounted(()=>{
     <h3>No Product Available 😒... </h3>
   </div>
  </div>
+
+ <div class="pagination-controls">
+  <button
+  @click = "gotoPage(currentPage - 1)"
+  :disabled = "currentPage === 1"
+  >
+    Prev
+  </button>
+     <span>{{ currentPage }} of {{ totalPages }}</span>
+  <button
+    @click ="gotoPage(currentPage + 1)"
+  :disabled = "currentPage === totalPages"
+  >
+    Next
+  </button>
+ </div>
   <p>
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
@@ -108,5 +138,12 @@ button{
   color: aliceblue;
   border: 0.5px solid aliceblue;
   border-radius: 5px;
+}
+
+.pagination-controls{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
 }
 </style>

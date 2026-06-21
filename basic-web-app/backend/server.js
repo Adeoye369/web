@@ -40,16 +40,26 @@ app.post('/api/products', async (req, res)=>{
 })
 
 // get products ENDPOINTS
-
 app.get('/api/products', async(req, res)=>{
+    const page = parseInt(req.query.page)||1
+    const limit = parseInt(req.query.limit) || 10
+
+    const offset = (page - 1) * limit
+
     try {
-        const products = await Product.findAll({
-            benchmark: true,
-            logging: (sql, timingMs)=>{
-                console.log(`findAll took, ${timingMs}ms`)
-            }
+
+        const {rows, count} = await Product.findAndCountAll({
+            limit: limit,
+            offset: offset
         })
-        res.json(products)
+
+        const totalPages = Math.ceil(count/limit) 
+
+        res.json({
+            products: rows,
+            totalPages: totalPages,
+            totalProducts: count
+        })
     } catch (error) {
         res.status(500).json(error.message)
     }
