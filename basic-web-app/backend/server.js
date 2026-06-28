@@ -41,8 +41,9 @@ app.post('/api/products', async (req, res)=>{
 
 // get products ENDPOINTS
 app.get('/api/products', async(req, res)=>{
-    const page = parseInt(req.query.page)||1
-    const limit = parseInt(req.query.limit) || 10
+
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 6
 
     const offset = (page - 1) * limit
 
@@ -53,7 +54,7 @@ app.get('/api/products', async(req, res)=>{
             offset: offset
         })
 
-        const totalPages = Math.ceil(count/limit) 
+    const totalPages = Math.ceil(count / limit)
 
         res.json({
             products: rows,

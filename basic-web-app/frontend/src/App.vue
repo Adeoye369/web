@@ -9,7 +9,7 @@ const products = ref([])
 const totalPages = ref(0)
 const currentPage = ref(1)
 const totalProducts = ref(0)
-const limit = 10
+const limit = 6
 
 const BASE_URL = 'http://localhost:3000'
 
@@ -35,19 +35,20 @@ async function getProduct(){
     products.value = res.data.products
     totalPages.value = res.data.totalPages
     totalProducts.value = res.data.totalProducts
-
       
   } catch (error) {
     console.log(error.response.data)
   }
 }
 
-function gotoPage(page){
+const gotoPage = (page)=> {
   if(page >= 1 && page <= totalPages.value){
     currentPage.value = page
     getProduct()
   }
 }
+
+
 
 async function initMsg(){
   try {
@@ -66,16 +67,18 @@ onMounted(()=>{
 <template>
   <h1>{{ message }}</h1>
   <hr>
- <div class="product-add-section">
-   <h2>Add Product</h2>
-  <form action="" class="product-form" @submit.prevent="postProduct">
-    <input type="text" label="name", name="name" placeholder="Product name..." v-model="productForm.name" />
-    <input type="number" label="price", name="price" placeholder="your price.." v-model="productForm.price" />
-    <textarea name="description" label="description" placeholder="Your Product Description" v-model="productForm.description" ></textarea>
-
-    <button type="submit">Add Product </button>
-  </form>
- </div>
+  <div class="product-section">
+    <div class="product-add-section">
+      <h2>Add Product</h2>
+     <form action="" class="product-form" @submit.prevent="postProduct">
+       <input type="text" label="name", name="name" placeholder="Product name..." v-model="productForm.name" />
+       <input type="number" label="price", name="price" placeholder="your price.." v-model="productForm.price" />
+       <textarea name="description" label="description" placeholder="Your Product Description" v-model="productForm.description" ></textarea>
+   
+       <button type="submit">Add Product </button>
+     </form>
+    </div>
+  </div>
 
  <div class="product-display-section">
   <h2>Products</h2>
@@ -90,21 +93,20 @@ onMounted(()=>{
   </div>
  </div>
 
- <div class="pagination-controls">
+ <div class="pagination-control">
   <button
-  @click = "gotoPage(currentPage - 1)"
-  :disabled = "currentPage === 1"
-  >
-    Prev
-  </button>
-     <span>{{ currentPage }} of {{ totalPages }}</span>
+  @click="gotoPage(currentPage - 1)"
+  :disabled="currentPage === 1"
+  >Prev</button>
+
+  <span>{{ currentPage }} of {{ totalPages }}</span>
+
   <button
-    @click ="gotoPage(currentPage + 1)"
-  :disabled = "currentPage === totalPages"
-  >
-    Next
-  </button>
+  @click="gotoPage(currentPage + 1)"
+  :disabled="currentPage === totalPages"
+  >Next</button>
  </div>
+
   <p>
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
@@ -112,11 +114,19 @@ onMounted(()=>{
 </template>
 
 <style scoped>
+
+.product-section{
+  display: flex;
+  justify-content: center;
+}
+
+
+
 .product-form{
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50vw;
+  width: 33vw;
 }
 
 .product-display{
@@ -140,10 +150,15 @@ button{
   border-radius: 5px;
 }
 
-.pagination-controls{
+.pagination-control{
   display: flex;
   justify-content: center;
   gap: 10px;
-
 }
+
+button:disabled{
+  cursor: not-allowed;
+  background-color: gray;
+}
+
 </style>
