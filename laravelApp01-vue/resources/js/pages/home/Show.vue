@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import NavLayout from '../components/NavLayout.vue';
+defineOptions({layout: NavLayout});
 </script>
+
+
 
 <template>
     <div>

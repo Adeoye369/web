@@ -11,7 +11,7 @@ class IndexController extends Controller
         return inertia('home/Index',
             [
                 'message'=> "Hello from IndexAction",
-                'count' => 1000,
+                'count' => 40,
                 'isLogged' => false
              ]
         );
