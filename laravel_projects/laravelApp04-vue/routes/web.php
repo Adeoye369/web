@@ -7,3 +7,4 @@ use App\Http\Controllers\IndexController;
 
 Route::get('/', [IndexController::class, 'home'])->name('Home Page');
 Route::get('/about', [IndexController::class, 'aboutPage']);
+Route::resource
