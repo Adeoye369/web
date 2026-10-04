@@ -1,31 +1,29 @@
 from django.shortcuts import get_list_or_404, render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.db.models import F, QuerySet
+from django.db.models import F
 from django.urls import reverse
-from django.views import generic
 
 from .models import Question, ChoiceSelection
 
 
-class IndexView(generic.ListView):
-    template_name="polls/index.html"
-    context_object_name="latest_qlist"
-
-    def get_queryset(self)-> QuerySet[Question]:
-        """Return the last five published questions."""
-        return Question.objects.order_by("-published_date")[:5]
-    
-
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = "polls/detail.html"
-    context_object_name = "q"
+def index (request: HttpRequest) -> HttpResponse:
+    qlist = get_list_or_404(Question.objects.order_by("-published_date"))
+    context = {"latest_qlist": qlist}
+    return render(request, "polls/index.html", context)
 
 
-class ResultsView(generic.DetailView):
-    model = Question
-    template_name = "polls/results.html"
-    context_object_name = "q"
+
+def detail(request: HttpRequest, question_id: int) -> HttpResponse:
+    question = get_object_or_404(Question, pk=question_id)
+
+    return render(request, 
+                  "polls/detail.html", 
+                  {"q": question})
+
+
+def results(request:HttpRequest, question_id: int) -> HttpResponse:
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, "polls/results.html", {"q": question})
 
 
 def vote(request: HttpRequest, question_id: int) -> HttpResponse:
