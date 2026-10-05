@@ -44,6 +44,18 @@ div.container li{
     font-size: 1.2rem;
 }
 
+div.side{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start;
+    align-items: center;
+}
+
+div.poll-img{
+    width: 100px; height: 100px;
+    background:  url("images/poll-image.png") no-repeat center / contain;
+}
+
 div.container fieldset{
     border: 2px solid var(--secondary_color);
     padding: 20px;

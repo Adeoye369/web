@@ -9,7 +9,10 @@
   </head>
   <body>
     <div class="container">
-      <h1>Polls</h1>
+      <div class="side">
+        <h1 class="poll-title">Polls</h1>
+        <div class="poll-img"></div>
+      </div> 
       {% if latest_qlist %}
           <ul>
               {% for q in latest_qlist %}

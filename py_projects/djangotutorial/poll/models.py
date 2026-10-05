@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 
 
 class Question(models.Model):
@@ -11,9 +12,14 @@ class Question(models.Model):
     def __str__(self)-> str:
         return f"question: {self.question_text}, pub. date: {self.published_date}\n"
 
+    @admin.display(
+            boolean=True, 
+            ordering="published_date", 
+            description="Published recently"
+            )
     def was_published_recently(self) -> bool:
-        return self.published_date >= (timezone.now() - datetime.timedelta(days=1))
-
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.published_date <= now
 
 class ChoiceSelection(models.Model):
     question   = models.ForeignKey(Question, on_delete=models.CASCADE)
