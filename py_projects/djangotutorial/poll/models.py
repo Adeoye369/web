@@ -10,7 +10,7 @@ class Question(models.Model):
     published_date= models.DateTimeField("published date")
 
     def __str__(self)-> str:
-        return f"question: {self.question_text}, pub. date: {self.published_date}\n"
+        return self.question_text
 
     @admin.display(
             boolean=True, 

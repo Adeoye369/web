@@ -1,3 +1,5 @@
+import datetime
+
 from django.utils import timezone
 
 from django.shortcuts import get_list_or_404, render, get_object_or_404
@@ -18,9 +20,9 @@ class IndexView(generic.ListView):
         Return the last five published questions.
         (not including those set to be published in the future).
         """
-        return Question.objects.filter(published_date__lte=timezone.now()).order_by("-published_date")[:5]
-        # return Question.objects.order_by("-published_date")[:5]
-    
+        return Question.objects.filter(published_date__lte=timezone.now()).order_by("-published_date")
+
+
 
 class DetailView(generic.DetailView):
     model = Question
